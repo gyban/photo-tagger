@@ -1,0 +1,16 @@
+.textpanel {
+    position: relative;
+    /*border: 1px dotted gray;*/
+    display: inline-block; /* if you want this container to shrink-to-fit */
+}
+.textpanel img {
+    display: block;
+}
+/*.textpanel textarea {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    height: 200px;
+    width: 200px;
+    background-color: rgba(255,255,255,0.5);
+    }*/
