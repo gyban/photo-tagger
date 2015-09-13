@@ -42,9 +42,9 @@ function onSuccess(imageURI) {
         console.log("res.rows.length: " + res.rows.length + " -- should be 1");
         console.log("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 1");
 		console.log("populateDB finished");
+		console.log('pragma table_info(photo);');
         });
     }
-}
     // Transaction error callback    
     function errorCB(err) {
         alert("Error processing SQL: " + err.message);		
@@ -53,7 +53,7 @@ function onSuccess(imageURI) {
     function successCB() {
         console.log("success!");
     }
-
+}
 
 function onFail(message) {
     alert('Failed because: ' + message);
