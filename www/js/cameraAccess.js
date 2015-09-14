@@ -12,7 +12,7 @@ function onDeviceReady() {
         alert("SQL database is not supported in this browser!");
     }
 //Create database
-    db = window.sqlitePlugin.openDatabase({name: "my.db"});
+    db = window.sqlitePlugin.openDatabase({name: "my.db",androidDatabaseImplementation: 2});
 	console.log(db);
 	}
 function onSuccess(imageURI) {
@@ -30,7 +30,7 @@ function onSuccess(imageURI) {
 		tx.executeSql('DROP TABLE IF EXISTS tag');
         tx.executeSql('CREATE TABLE IF NOT EXISTS  tag (tag_pk integer primary key, tagname text)');
 		tx.executeSql('DROP TABLE IF EXISTS mapper');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key, FOREIGN KEY tag_fk REFERENCES tag(tag_pk), FOREIGN KEY photo_fk REFERENCES photo(photo_pk)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
         console.log("tables created"); 
         //Insert the photo path to the photo table
 		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ '+ imageURI +' ] , function (tx, res) {
@@ -42,7 +42,7 @@ function onSuccess(imageURI) {
         console.log("res.rows.length: " + res.rows.length + " -- should be 1");
         console.log("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 1");
 		console.log("populateDB finished");
-		console.log('pragma table_info(photo);');
+		tx.executeSql("PRAGMA table_info(photo);");
         });
     }
     // Transaction error callback    

@@ -107,7 +107,7 @@ function saveData(tag1, tag2, tag3, tag4) {
         for (i = 0; i <= tagMax; i++) {
             var inc = i;
             inc = inc++;
-            tx.executeSql('INSERT INTO mapper (tag_fk,photo_fk) VALUES (?,?)', ['inc', '+ photoMax +']);
+            tx.executeSql('INSERT INTO mapper (tag_fk,photo_fk) VALUES (?,?)', ['+ inc +', '+ photoMax +']);
             console.log(inc);
             console.log("max photo ID: " + photoMax + " --should be 1");
             console.log("inserting tags finished");
