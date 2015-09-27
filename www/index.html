@@ -40,6 +40,10 @@
             <div class="textpanel">
                 <img id="photo" data-title="My image title" data-description="My image description" style="width: 100%;" />
                 <textarea name="textarea" id="textarea"></textarea>
+				<div data-role="controlgroup" id="btnGroup" data-type="horizontal" data-theme="c">
+					<a data-role="button" data-icon="cancel" data-iconpos="notext" onclick="destroyTagEditor();">Cancel</a>
+					<a data-role="button" data-icon="check" data-iconpos="notext" onclick="saveLabels();">Delete</a>
+				</div>
             </div>			
         </div>
         <div data-role="footer">
@@ -50,6 +54,7 @@
     <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
     <script type="text/javascript" src="js/cameraAccess.js"></script>
     <script type="text/javascript" src="js/locationAccess.js"></script>
+	 <script type="text/javascript" src="js/saveTags.js"></script>
     <!--tagEditor taken and adjusted from the Simon Steinberger/Hans Braxmeier, pixabay.com/jquery/tag-editor/demo.html/-->
     <script type="text/javascript" src="js/jquery.caret.min.js"></script>
     <script  type="text/javascript" src="js/jquery.tag-editor.min.js"></script>

@@ -5,8 +5,7 @@ function getLocation() {
         delimiter: ",",
         forceLowercase: false,
         initialTags: []
-    });
-    //remTags();
+    });    
     //Check if geolocation is availiable, if yes continue, if not rasie alert
     if (navigator.geolocation) {
         //Obtain position  from the user's browser
@@ -35,14 +34,6 @@ function getLocation() {
                 break;
         }
     }
-}
-// Remove all tags
-function remTags() {
-    var tags = $('#textarea').tagEditor('getTags')[0].tags;
-    for (i = 0; i < tags.length; i++) {
-        $('textarea').tagEditor('removeTag', tags[i]);
-    }
-}
 //Use google maps API for reverse geocoding adjusted by me
 function printAddress(latitude, longitude) {
     //Set up google's geocoder object
@@ -62,7 +53,7 @@ function printAddress(latitude, longitude) {
                 $('#textarea').tagEditor('addTag', res[1]);
                 $('#textarea').tagEditor('addTag', res[2]);
                 $('#textarea').tagEditor('addTag', res[3]);
-                saveData(res[0], res[1], res[2], res[3]);
+                saveData(res);
             } else {
                 alert("No google address returned");
             }
@@ -71,54 +62,4 @@ function printAddress(latitude, longitude) {
         }
     });
 }
-
-function saveData(tag1, tag2, tag3, tag4) {
-    //Create database
-    db = window.sqlitePlugin.openDatabase({
-        name: "my.db"
-    });
-    console.log(db);
-
-    //Prepare database
-    db.transaction(populateDB, errorCB, successCB);
-
-    function populateDB(tx) {
-        console.log("inserting tags started");
-        //Insert the tag to the tag table
-        tx.executeSql('INSERT INTO tag (tagname) VALUES(?,?,?,?)', ['+ tag1 +', '+ tag2 +', '+ tag3 +', '+ tag4 +'], function (tx, res) {
-            console.log("insertId: " + res.insertId + " -- probably 4");
-            console.log("rowsAffected: " + res.rowsAffected + " -- should be 4");
-        });
-        //Check rows inserted in a tag table
-        tx.executeSql("SELECT count(tag_pk) as cnt FROM tag;", [], function (tx, res) {
-            console.log("res.rows.length: " + res.rows.length + " -- should be 4");
-            console.log("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 4");
-        });
-        //Find indexes of inserted tags and related photography
-        var photoMax = tx.executeSql("SELECT max(photo_pk) as maxim FROM photo;", [], function (tx, res) {
-            console.log("res.rows.length: " + res.rows.length + " -- should be 1");
-            console.log("res.rows.item(0).cnt: " + res.rows.item(0).maxim + " -- should be 1");
-        });
-        var tagMax = tx.executeSql("SELECT max(tag_pk) as maxim FROM tag;", [], function (tx, res) {
-            console.log("maxId: " + tagMax + " -- should be 4");
-            console.log("res.rows.item(0).cnt: " + res.rows.item(0).maxim + " -- should be 1");
-        });
-        //Create relation between tags and photo by updating mapper table
-        for (i = 0; i <= tagMax; i++) {
-            var inc = i;
-            inc = inc++;
-            tx.executeSql('INSERT INTO mapper (tag_fk,photo_fk) VALUES (?,?)', ['+ inc +', '+ photoMax +']);
-            console.log(inc);
-            console.log("max photo ID: " + photoMax + " --should be 1");
-            console.log("inserting tags finished");
-        }
-        // Transaction error callback    
-        function errorCB(err) {
-            alert("Error processing SQL: " + err.message);
-        }
-
-        function successCB() {
-            console.log("success!");
-        }
-    }
 }

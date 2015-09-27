@@ -12,7 +12,8 @@ function onDeviceReady() {
         alert("SQL database is not supported in this browser!");
     }
 //Create database
-    db = window.sqlitePlugin.openDatabase({name: "my.db",androidDatabaseImplementation: 2});
+    db = window.sqlitePlugin.openDatabase({name: "my.db" //,androidDatabaseImplementation: 2
+	});
 	console.log(db);
 	}
 function onSuccess(imageURI) {
@@ -33,7 +34,7 @@ function onSuccess(imageURI) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
         console.log("tables created"); 
         //Insert the photo path to the photo table
-		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ '+ imageURI +' ] , function (tx, res) {
+		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ imageURI ] , function (tx, res) {
         console.log("insertId: " + res.insertId + " -- probably 1");
         console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
         });
@@ -41,9 +42,9 @@ function onSuccess(imageURI) {
         tx.executeSql("SELECT count(photo_pk) as cnt FROM photo;", [], function (tx, res) {
         console.log("res.rows.length: " + res.rows.length + " -- should be 1");
         console.log("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 1");
-		console.log("populateDB finished");
-		tx.executeSql("PRAGMA table_info(photo);");
+		console.log("populateDB finished");		
         });
+		
     }
     // Transaction error callback    
     function errorCB(err) {
@@ -51,33 +52,25 @@ function onSuccess(imageURI) {
     }
 
     function successCB() {
-        console.log("success!");
+        console.log("success in saving photo metadata!");
     }
+	db.executePragmaStatement("pragma table_info (photo);", function(res) {
+                console.log("PRAGMA res: " + JSON.stringify(res));
+              });
 }
 
 function onFail(message) {
     alert('Failed because: ' + message);
 }
 // A button will call this function
-//
-//document.getElementById("button").addEventListener("click", function(){
-//    getLocation();
-//});
-//$("#button").click(onClick);
-//var onClick = function () {
-//   getPhoto();
-//window.location.assign("#detail");
-//    remTags();
-//    $("textarea").val("");
-//};
 
 function getPhoto() {
     // Opens camera and retrieve image
     navigator.camera.getPicture(onSuccess, onFail, {
         quality: 100,
         destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA
-		// Hack do to android emulator error
-        //saveToPhotoAlbum: true
+        sourceType: Camera.PictureSourceType.CAMERA,
+		// Hack: switch off in case of android emulator error
+        saveToPhotoAlbum: true
     });
 }
