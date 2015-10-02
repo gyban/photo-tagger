@@ -47,7 +47,7 @@ function printAddress(latitude, longitude) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[0]) {
                 //Split address to logical blocks
-                res = results[0].formatted_address.split(",");
+                var res = results[0].formatted_address.split(",");
                 //Fill up the text area with the tags created from the obtained address                    
                 $('#textarea').tagEditor('addTag', res[0]);
                 $('#textarea').tagEditor('addTag', res[1]);

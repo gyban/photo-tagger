@@ -54,9 +54,7 @@ function onSuccess(imageURI) {
     function successCB() {
         console.log("success in saving photo metadata!");
     }
-	db.executePragmaStatement("pragma table_info (photo);", function(res) {
-                console.log("PRAGMA res: " + JSON.stringify(res));
-              });
+	
 }
 
 function onFail(message) {
