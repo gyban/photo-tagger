@@ -26,12 +26,12 @@ function onSuccess(imageURI) {
     function populateDB(tx) {
         console.log("populateDB started");
         //Create necessary tables
-		tx.executeSql('DROP TABLE IF EXISTS photo');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS photo (photo_pk integer primary key, photopath text )');
-		tx.executeSql('DROP TABLE IF EXISTS tag');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS  tag (tag_pk integer primary key, tagname text)');
-		tx.executeSql('DROP TABLE IF EXISTS mapper');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
+		//tx.executeSql('DROP TABLE IF EXISTS photo');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS photo (photo_pk integer primary key asc, photopath text )');
+		//tx.executeSql('DROP TABLE IF EXISTS tag');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS  tag (tag_pk integer primary key asc, tagname text unique)');
+		//tx.executeSql('DROP TABLE IF EXISTS mapper');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key asc, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
         console.log("tables created"); 
         //Insert the photo path to the photo table
 		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ imageURI ] , function (tx, res) {

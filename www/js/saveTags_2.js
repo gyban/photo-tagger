@@ -22,10 +22,10 @@ function saveLabels() {
         console.log("no. of tags to be inserted: " + tags.length + "");
         //Insert the tags to the tag table
         for (i = 0; i < tags.length; i++) {
-            var nam = tags[i];
-            tx.executeSql('INSERT OR IGNORE INTO tag (tagname) VALUES(?)', [nam], function (tx, res) {
-                console.log("insertId: " + res.insertId + " tag name: " + nam + "");
-                //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+            var index = tags[i];
+            tx.executeSql('INSERT INTO tag (tagname) VALUES(?)', [index], function (tx, res) {
+                console.log("insertId: " + res.insertId + " probably " + index + "");
+                console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
             });
         }
         //Check rows inserted in a tag table
@@ -45,35 +45,25 @@ function saveLabels() {
             console.log("res.rows.item(0).cnt: " + res.rows.item(0).maxim + " -- should be 1");
         });
         //Create relation between tags and photo by updating mapper table
-		createMaping(tags,'INSERT INTO mapper (tag_fk,photo_fk) SELECT tag_pk,MAX(photo_pk) as maxid FROM tag,photo WHERE tag.tagname=?');
-		}// end of populateDB
-        // Transaction error callback    
-        function errorCB(err) {
-            alert("Error processing SQL: " + err.message);
+        for (i = 1; i <= tags.length; i++) {
+            tx.executeSql('INSERT INTO mapper (tag_fk,photo_fk) VALUES (?,?)', [i, maxPhoto], function (tx, res) {
+                console.log("tag ID: " + i + " maxPhoto is: " + maxPhoto + "");
+            });
         }
+    }
+    // Transaction error callback    
+    function errorCB(err) {
+        alert("Error processing SQL: " + err.message);
+    }
 
-        function successCB() {
-            console.log("success in saving labels!");
-            // Destroy tag editor's instance if needed
-            remTags();
-            getPhoto();
-        }
-    
+    function successCB() {
+        console.log("success in saving labels!");
+        // Destroy tag editor's instance if needed
+        remTags();
+        getPhoto();
+    }
 
     function destroyTagEditor() {
         $('#textarea').val('');
     }
-	function createMaping(tags,query) {
-            for (i = 0; i < tags.length; i++) {
-                db.transaction(makeTx(tags[i],query), errorCB);
-				console.log("tag ID: " + i + " photo ID: " + maxPhoto + "");
-            } //end for call
-            function makeTx(val,query) {
-                return function (tx) {
-                    tx.executeSql(query, [val], function (tx, res) {
-                    console.log("success mapping");    						
-                    }, errorCB);
-                };
-            }
-        } //end createMapping
 }
