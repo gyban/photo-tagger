@@ -1,0 +1,32 @@
+
+
+$(document).ready(function(){
+
+    // http://joQuery.com/2012/string-format-for-javascript
+    var url = 'http://joquery.com',
+        year = 2012,
+        titleEncoded = 'string-format-for-javascript',
+        title = 'string.format for Javascript';
+
+    var link = String.format('<a href=""{0}"" style=""font-size:{1};"">{2}</a>{3}',
+                             url, year, titleEncoded, title);
+
+    $("#myLink").append($(link));
+});
+	}
+} next
+String.format = function() {
+    // The string containing the format items (e.g. "{0}")
+    // will and always has to be the first argument.
+    var theString = arguments[0];
+
+    // start with the second argument (i = 1)
+    for (var i = 1; i < arguments.length; i++) {
+        // "gm" = RegEx options for Global search (more than one instance)
+        // and for Multiline search
+        var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+        theString = theString.replace(regEx, arguments[i]);
+    }
+
+    return theString;
+}

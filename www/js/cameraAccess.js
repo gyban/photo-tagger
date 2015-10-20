@@ -6,12 +6,12 @@ var image;
 //When successfull do things
 function onDeviceReady() {
     // Now safe to use device APIs
-    console.log(navigator.camera);
+    //console.log(navigator.camera);
     //console.log(sqlitePlugin.openDatabase);
     if (!window.sqlitePlugin.openDatabase) {
-        alert("SQL database is not supported in this browser!");
+        alert("We are sorry, but SQLite database is not supported by this browser!");
     }
-//Create database
+//Open or create database
     db = window.sqlitePlugin.openDatabase({name: "my.db" //,androidDatabaseImplementation: 2
 	});
 	console.log(db);
@@ -61,7 +61,6 @@ function onFail(message) {
     alert('Failed because: ' + message);
 }
 // A button will call this function
-
 function getPhoto() {
     // Opens camera and retrieve image
     navigator.camera.getPicture(onSuccess, onFail, {
