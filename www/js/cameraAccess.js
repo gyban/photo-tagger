@@ -1,20 +1,18 @@
 //Add a listener and wait for the device to be ready
 document.addEventListener("deviceready", onDeviceReady, false);
 //Define a global variable
-var db;
+//var db;
 var image;
 //When successfull do things
 function onDeviceReady() {
     // Now safe to use device APIs
     //console.log(navigator.camera);
     //console.log(sqlitePlugin.openDatabase);
-    if (!window.sqlitePlugin.openDatabase) {
-        alert("We are sorry, but SQLite database is not supported by this browser!");
-    }
+    
 //Open or create database
-    db = window.sqlitePlugin.openDatabase({name: "my.db" //,androidDatabaseImplementation: 2
-	});
-	console.log(db);
+    //db = window.sqlitePlugin.openDatabase({name: "my.db" //,androidDatabaseImplementation: 2
+	//});
+	//console.log(db);
 	}
 function onSuccess(imageURI) {
     image = document.getElementById("photo");
@@ -24,7 +22,7 @@ function onSuccess(imageURI) {
     //Prepare database
 	db.transaction(populateDB, errorCB, successCB);
     function populateDB(tx) {
-        console.log("populateDB started");
+        /*console.log("populateDB started");
         //Create necessary tables
 		//tx.executeSql('DROP TABLE IF EXISTS photo');
         tx.executeSql('CREATE TABLE IF NOT EXISTS photo (photo_pk integer primary key asc, photopath text )');
@@ -32,7 +30,7 @@ function onSuccess(imageURI) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS  tag (tag_pk integer primary key asc, tagname text unique)');
 		//tx.executeSql('DROP TABLE IF EXISTS mapper');
         tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key asc, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
-        console.log("tables created"); 
+        console.log("tables created");*/ 
         //Insert the photo path to the photo table
 		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ imageURI ] , function (tx, res) {
         console.log("insertId: " + res.insertId + " -- probably 1");

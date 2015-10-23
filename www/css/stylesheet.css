@@ -3,27 +3,53 @@
     /*border: 1px dotted gray;*/
     display: inline-block; /* if you want this container to shrink-to-fit */
 }
-.textpanel img #btnGroup {
+.textpanel #photo #btnGroup {
     display: block;
 }
-/*.textpanel textarea {
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    height: 200px;
-    width: 200px;
-    background-color: rgba(255,255,255,0.5);
-    }*/
+
 #btnGroup {
-	position: relative;/*absolute;*/
+	position: absolute;
+	bottom: 10%;
+	left: 50%;
 }
-.labelCloud {
-    width: 100%;
-    text-align: center;
-    border: 1px solid #898989;
-    border-radius: 11px;
-    padding: 2px;
-}
+
 .thumbs {
 float:left;
 }
+
+/*#btnCam {left: 50%;}
+
+#btnCam span span {
+    height: 100px !important;  
+    line-height: 70px;
+	font-size:medium;	
+}*/
+
+/*body {
+font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+font-size:1.5em;
+}*/
+
+.s1 .ui-btn-text {
+	font-size: xx-small;
+}
+.s2 .ui-btn-text{
+	font-size: x-small;
+}
+.s3 .ui-btn-text{
+	font-size: small;
+}
+.s4 .ui-btn-text{
+	font-size: medium;
+}
+.s5 .ui-btn-text{
+	font-size: large;
+}
+.s6 .ui-btn-text{
+	font-size: x-large;
+}
+.s7 .ui-btn-text{
+	font-size: xx-large;
+}
+
+

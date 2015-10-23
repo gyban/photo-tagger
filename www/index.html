@@ -26,17 +26,19 @@
 	<title>Photo Tagger</title>
 </head>
 <body class="container" >
-    <div data-role="page"  id="main">
+    <div data-role="page" id="main">
         <div data-role="header">				
             <h1>Photo Tagger</h1>
         </div>
         <div data-role="content" id="content1">
 			<div id="tagcloud"></div>
         </div>
-        <div data-role="footer">
-            <div id="selfie">
-                <a href="#detail" data-role="button" id="button" data-theme="b" onclick="getPhoto();" >Cam</a>
-            </div>
+        <div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+            <ul>
+                <li><a href="#detail" data-role="button" id="btnCam" class="ui-btn-active" onclick="getPhoto();" >CAMERA</a></li>
+            </ul>
+        </div>		    
         </div>
     </div>
     <div data-role="page" id="detail">
@@ -56,10 +58,7 @@
 					<a data-role="button" data-icon="check" data-iconpos="notext" onclick="saveLabels();">Delete</a>
 				</div>
             </div>
-        </div>
-        <div data-role="footer">
-            <div style="font-family: Helvetica; font-size: 0.7em">&copy Copyright Rado Kavciak</div>
-        </div>
+        </div>        
     </div>
 	<div data-role="page" id="photolist">
         <div data-role="header">

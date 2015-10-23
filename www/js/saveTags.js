@@ -79,12 +79,12 @@ function saveLabels() {
   function createMaping(tags, query) {
     for (i = 0; i < tags.length; i++) {
       db.transaction(makeTx(tags[i], query), errorCB);
-      console.log("tag ID: " + i + " photo ID: " + maxPhoto + "");
+      //console.log("tag ID: " + i + " photo ID: " + maxPhoto + "");
     } //end for call
     function makeTx(val, query) {
       return function(tx) {
         tx.executeSql(query, [val], function(tx, res) {
-          console.log("success mapping");
+          //console.log("success mapping");
         }, errorCB);
       };
     }
