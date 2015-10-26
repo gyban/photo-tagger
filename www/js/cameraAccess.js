@@ -57,6 +57,7 @@ function onSuccess(imageURI) {
 
 function onFail(message) {
     alert('Failed because: ' + message);
+	
 }
 // A button will call this function
 function getPhoto() {

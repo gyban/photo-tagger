@@ -17,9 +17,9 @@
 float:left;
 }
 
-/*#btnCam {left: 50%;}
+#btnCam .ui-btn-text{font-size: 120%;}
 
-#btnCam span span {
+/*#btnCam span span {
     height: 100px !important;  
     line-height: 70px;
 	font-size:medium;	
@@ -31,25 +31,25 @@ font-size:1.5em;
 }*/
 
 .s1 .ui-btn-text {
-	font-size: xx-small;
+	font-size: 100%;
 }
 .s2 .ui-btn-text{
-	font-size: x-small;
+	font-size: 120%;
 }
 .s3 .ui-btn-text{
-	font-size: small;
+	font-size: 140%;
 }
 .s4 .ui-btn-text{
-	font-size: medium;
+	font-size: 160%;
 }
 .s5 .ui-btn-text{
-	font-size: large;
+	font-size: 180%;
 }
 .s6 .ui-btn-text{
-	font-size: x-large;
+	font-size: 200%;
 }
 .s7 .ui-btn-text{
-	font-size: xx-large;
+	font-size: 220%;
 }
 
 

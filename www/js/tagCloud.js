@@ -43,9 +43,7 @@ function createTagCloud(tx, res) {
     var len = res.rows.length;
 	//Cache most used jquery selectors
 var $tagcloud = $('#tagcloud'),
-    $content1 = $('#content1'),
-    $photolist = $('#photolist'),
-    $content3 = $('#content3');
+    $content1 = $('#content1');    
     //Check if query returned results, if not inform the user
     if (len === 0) {
         var info = "<p>You do not have any photo labels yet, so, let's start to get some!:)</p?>";
@@ -107,27 +105,22 @@ var $tagcloud = $('#tagcloud'),
             //Apply calculated font size
             fontsize = fontScale[scaleValue];			
             newMarkup +=
-                "<a href='#photolist' data-role='button' data-inline='true' onclick='displayPhoto(" + name + ");' class="+ fontsize +">" + name + " ("+weight+")</a>";
+                "<a href='#' data-role='button' data-inline='true' id='"+name+"' onclick='displayPhoto("+name+");' class="+ fontsize +">" + name + " ("+weight+")</a>";
     }
         $tagcloud.append(newMarkup);
         $content1.trigger("create");
     }
 //Display related photos after button click on the tag
-function displayPhoto(tag) {
+function displayPhoto(name) {
     //Select tag and related photos
+	console.log(name);
+	var tag = name;
     var query2 =
         'SELECT photo.photopath FROM tag LEFT JOIN mapper ON mapper.tag_fk = tag.tag_pk JOIN photo ON photo.photo_pk = mapper.photo_fk WHERE tag.tagname=?;';
-    var urilinks = queryDbResultset(tag,query2);
-    var newMarkup = "";
-    for (i = 0; i < urilinks.length; i++) {
-        var uri = urilinks[i];
-        console.log(uri);
-        newMarkup += "<div class='thumbs'><a href=" + uri + "><img src=" + uri +
-            "'width:20%;'></img></a></div>";
-    }
-    $photolist.append(newMarkup);
-    $content3.trigger("create");
+    queryDb2(query2,tag);	    
 }
+//Create thumbnails
+
 //SQL query returning resultset
 function queryDb(query, args) {
     db.transaction(makeTx(query, args), errorCB, successCB);
@@ -137,6 +130,26 @@ function queryDb(query, args) {
             tx.executeSql(query, [], createTagCloud, errorCB);
         };
     }
+}
+
+function createThumbs (tx,res) {
+	console.log("I am in createThumbs!");
+	var newMarkup = "";
+	var len = res.rows.length;
+	var $thumbsGal = $('#thumbsGal'),
+    $content3 = $('#content3');	
+    for (var i = 0; i < len; i++) {
+        var uri = res.rows.item(i).photopath;
+        console.log(uri);
+        newMarkup += "<a href="+uri+"><img src='"+uri+"' style='width:20%;'float:left;'padding: 3px 3px 3px 3px;'/></a>";
+		}
+	$thumbsGal.append(newMarkup);
+    $content3.trigger("create");
+	$.mobile.changePage('#photolist',{
+		transition: 'pop',
+		reverse: false,
+		changeHash: false
+	});
 }
 // Transaction error callback    
 function errorCB(err) {
@@ -157,4 +170,22 @@ function stddev() {
         sum_sq += num * num;
         return Math.sqrt((sum_sq / n) - Math.pow(sum / n, 2));
     };
+}
+//Select all photos related to given tag
+function queryDb2(query, args) {
+    db.transaction(makeTx(query, args), errorCB, successCB);
+
+    function makeTx(query, args) {
+        return function (tx) {
+			//alert("SQL query!");
+            tx.executeSql(query, [args], createThumbs, errorCB);
+        };
+    }
+}
+
+function getPhoto(source) {
+  // Retrieve image file location from specified source
+  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    destinationType: destinationType.FILE_URI,
+    sourceType: source });
 }

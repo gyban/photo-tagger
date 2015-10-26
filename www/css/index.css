@@ -37,7 +37,7 @@ body {
     );
     background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    font-size:12px;
+    font-size:15px;
     height:100%;
     margin:0px;
     padding:0px;
@@ -112,4 +112,57 @@ h1 {
 .blink {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
+}
+/* custom CSS */
+.textpanel {
+    position: relative;
+    /*border: 1px dotted gray;*/
+    display: inline-block; /* if you want this container to shrink-to-fit */
+}
+
+.textpanel #photo #btnGroup {
+    display: block;
+}
+
+#btnGroup {
+	position: absolute;
+	bottom: 10%;
+	left: 50%;
+}
+
+.thumbs {
+float:left;
+}
+#btnCam  { 
+width: 100px !important;
+height: 100px !important;
+border-radius: 50% !important;
+font-size:medium !important;
+margin: 0 auto;
+}
+#btnCam span span {
+    height: 100px !important;  
+    line-height: 70px;
+	font-size:medium
+}
+.1 {
+	font-size: 100%;
+}
+.2 {
+	font-size: 130%;
+}
+.3 {
+	font-size: 160%;
+}
+.4 {
+	font-size: 190%;
+}
+.5 {
+	font-size: 220%;
+}
+.6 {
+	font-size: 250%;
+}
+.7 {
+	font-size: 280%;
 }
