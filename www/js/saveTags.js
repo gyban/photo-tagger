@@ -62,11 +62,13 @@ function saveLabels() {
   function errorCB(err) {
     alert("Error processing SQL: " + err.message);
   }
+ $tagcloud = $('#tagcloud');
 //Transaction success callback
   function successCB() {
     console.log("success in saving labels!");
     // Destroy tag editor's instance if needed
     remTags();
+	$tagcloud.refresh();
     getPhoto();
   }
 

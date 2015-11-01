@@ -6,7 +6,7 @@ function getLocation() {
         forceLowercase: false,
         initialTags: []
     });    
-    //Check if geolocation is availiable, if yes continue, if not rasie alert
+    //Check if geolocation is availiable, if yes continue, if not rasie an alert
     if (navigator.geolocation) {
         //Obtain position  from the user's browser
         navigator.geolocation.getCurrentPosition(success, error);
@@ -48,11 +48,22 @@ function printAddress(latitude, longitude) {
             if (results[0]) {
                 //Split address to logical blocks
                 var res = results[0].formatted_address.split(",");
-                //Fill up the text area with the tags created from the obtained address                    
+				//Get UTC time and convert it to local time
+				var timeUtc = Math.floor(Date.now() / 1000);
+				alert(timeUtc);
+				var  d = new Date();
+				console.log("UTC time :" + d);
+				var localtime = d.toLocaleDateString();
+				console.log(localtime);
+				//d.setUTCSeconds(timeUtc);
+				var d2 = Date.UTC(localtime);
+				console.log(d2);
+				//Fill up the text area with the tags created from the obtained address                    
                 $('#textarea').tagEditor('addTag', res[0]);
                 $('#textarea').tagEditor('addTag', res[1]);
                 $('#textarea').tagEditor('addTag', res[2]);
-                $('#textarea').tagEditor('addTag', res[3]);
+                $('#textarea').tagEditor('addTag',localtime );
+				//console.log(results[0].types);
                 saveData(res);
             } else {
                 alert("No google address returned");

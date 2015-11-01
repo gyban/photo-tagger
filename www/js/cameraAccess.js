@@ -70,3 +70,14 @@ function getPhoto() {
         saveToPhotoAlbum: true
     });
 }
+//Show full sized image 
+function showPhoto(source) {
+  // Retrieve image file location from specified source
+  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    destinationType: destinationType.FILE_URI,
+    sourceType:  Camera.PictureSourceType.SAVEDPHOTOALBUM, });
+}
+function onPhotoURISuccess () {
+	alert("You did it!");
+}
+

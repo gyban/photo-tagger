@@ -59,9 +59,8 @@ var $tagcloud = $('#tagcloud'),
     //Define min and max weight of the tags
     var minWeight = Number.MAX_VALUE;    
     var maxWeight = -Math.abs(Number.MAX_VALUE);    
-    //Define font for photo labels 
-    //var fontScale = ["xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large"]; //css font styles for the names of the buttons
-	var fontScale = ['s1','s2','s3','s4','s5','s6','s7'];
+    //Define font for photo labels     
+	var fontScale = ['s1','s2','s3','s4','s5','s6','s7'];//css font styles for the names of the buttons
     //weight = parseFloat(weight).toFixed(2);
     minWeight = parseFloat(minWeight).toFixed(2);
 	console.log("minWeight is: " + minWeight);
@@ -105,10 +104,11 @@ var $tagcloud = $('#tagcloud'),
             //Apply calculated font size
             fontsize = fontScale[scaleValue];			
             newMarkup +=
-                "<a href='#' data-role='button' data-inline='true' id='"+name+"' onclick='displayPhoto("+name+");' class="+ fontsize +">" + name + " ("+weight+")</a>";
+                "<a href='#' data-role='button' data-inline='true' id='"+name+"' onclick='displayPhoto(this.id);' class="+fontsize+">"+name+" ("+weight+")</a>";
+				
     }
         $tagcloud.append(newMarkup);
-        $content1.trigger("create");
+        $content1.trigger("create");		
     }
 //Display related photos after button click on the tag
 function displayPhoto(name) {
@@ -119,8 +119,6 @@ function displayPhoto(name) {
         'SELECT photo.photopath FROM tag LEFT JOIN mapper ON mapper.tag_fk = tag.tag_pk JOIN photo ON photo.photo_pk = mapper.photo_fk WHERE tag.tagname=?;';
     queryDb2(query2,tag);	    
 }
-//Create thumbnails
-
 //SQL query returning resultset
 function queryDb(query, args) {
     db.transaction(makeTx(query, args), errorCB, successCB);
@@ -131,25 +129,28 @@ function queryDb(query, args) {
         };
     }
 }
-
+//Create thumbnails
 function createThumbs (tx,res) {
 	console.log("I am in createThumbs!");
 	var newMarkup = "";
 	var len = res.rows.length;
-	var $thumbsGal = $('#thumbsGal'),
-    $content3 = $('#content3');	
+	var $thumbs = $('#thumbs');
+	var $content3 = $('#content3');
+	//Clear previous thumbnails (DOM) from the cache	
+    $thumbs.empty();
     for (var i = 0; i < len; i++) {
         var uri = res.rows.item(i).photopath;
         console.log(uri);
-        newMarkup += "<a href="+uri+"><img src='"+uri+"' style='width:20%;'float:left;'padding: 3px 3px 3px 3px;'/></a>";
-		}
-	$thumbsGal.append(newMarkup);
-    $content3.trigger("create");
-	$.mobile.changePage('#photolist',{
-		transition: 'pop',
-		reverse: false,
-		changeHash: false
-	});
+        //newMarkup += "<div class='thumbnail'><a href='"+uri+"' ><img src='"+uri+"' class='thumb'/></a></div>";
+		newMarkup += "<li><a href='#'><img src='"+uri+"'></a></li>";
+	}
+	//newMarkup +="</ul>";
+	//Create thumbnails list dynamically
+	$thumbs.append(newMarkup);	
+	$.mobile.changePage('#photolist');
+	//Hack due to enhancment issues with listview re-generation
+	$thumbs.listview().listview('refresh');
+	$content3.trigger('create');
 }
 // Transaction error callback    
 function errorCB(err) {
@@ -182,10 +183,8 @@ function queryDb2(query, args) {
         };
     }
 }
-
-function getPhoto(source) {
-  // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: destinationType.FILE_URI,
-    sourceType: source });
-}
+$thumb = $('thumb');
+$thumb.click(function () {
+var uri = $('img', this).attr('src');
+showPhoto(uri);
+    },false);
