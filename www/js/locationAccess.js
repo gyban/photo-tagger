@@ -1,7 +1,15 @@
 //Taken from the Ben Marshall, http://www.benmarshall.me/reverse-geocoding-html5-google/  and and adjusted by me
+var unixtime;
+var utctime;
 function getLocation() {
+	//Get UTC time with time zone			
+	utctime = new Date();				
+	//Get Unix epoch time without miliseconds
+	unixtime = Math.floor(Date.parse(utctime) / 1000);
     //Initialize tagger
     $("#textarea").tagEditor({
+		removeDuplicates: true,
+		clickDelete: true,
         delimiter: ",",
         forceLowercase: false,
         initialTags: []
@@ -47,24 +55,19 @@ function printAddress(latitude, longitude) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[0]) {
                 //Split address to logical blocks
-                var res = results[0].formatted_address.split(",");
-				//Get UTC time and convert it to local time
-				var timeUtc = Math.floor(Date.now() / 1000);
-				alert(timeUtc);
-				var  d = new Date();
-				console.log("UTC time :" + d);
-				var localtime = d.toLocaleDateString();
-				console.log(localtime);
-				//d.setUTCSeconds(timeUtc);
-				var d2 = Date.UTC(localtime);
-				console.log(d2);
-				//Fill up the text area with the tags created from the obtained address                    
-                $('#textarea').tagEditor('addTag', res[0]);
-                $('#textarea').tagEditor('addTag', res[1]);
-                $('#textarea').tagEditor('addTag', res[2]);
-                $('#textarea').tagEditor('addTag',localtime );
-				//console.log(results[0].types);
-                saveData(res);
+                var res = results[0].formatted_address.split(",");				
+				//Get Local time
+				var localtime = utctime.toLocaleDateString();
+				//Get UTC back from Unix time				
+				//var utcFromUnix = new Date(unixtime);			
+				//console.log("Back to UTC :" +d2);
+				res.push(localtime);
+				//Fill up the text area with the tags created from the obtained address
+				var len = res.length;
+				for (var i = 0; i < len;i++) {
+                $('#textarea').tagEditor('addTag', res[i]);                
+				//console.log(results[0].types);                
+				}
             } else {
                 alert("No google address returned");
             }

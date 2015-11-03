@@ -4,30 +4,31 @@ var tags;
 var maxPhoto;
 var maxTag;
 var minTag;
+var $textarea = $('#textarea');
 // Remove all tags from the tag editor's instance
 function remTags() {
-  for (i = 0; i < tags.length; i++) {
-    $('textarea')
-      .tagEditor('removeTag', tags[i]);
+  for (var i = 0; i < tags.length; i++) {
+    $('#textarea').tagEditor('removeTag', tags[i]);
   }
 }
 //Save labels to database
 function saveLabels() {
+	$textarea.show();
   //Fill tags to global variable  
-  tags = $('#textarea')
-    .tagEditor('getTags')[0].tags;
+  tags = $('#textarea').tagEditor('getTags')[0].tags;
   //Create db transaction
   db.transaction(populateDB, errorCB, successCB);
   //Insert data, select data from the database
   function populateDB(tx) {
+	var len = tags.length;
     console.log("inserting tags started");
-    console.log("no. of tags to be inserted: " + tags.length + "");
+    console.log("no. of tags to be inserted: " + len);
     //Insert the tags to the tag table
-    for (i = 0; i < tags.length; i++) {
+    for (var i = 0; i < len; i++) {
       var nam = tags[i];
       tx.executeSql('INSERT OR IGNORE INTO tag (tagname) VALUES(?)', [nam],
         function(tx, res) {
-          console.log("insertId: " + res.insertId + " tag name: " + nam + "");
+          console.log("insertId: " + res.insertId + " tag name: " + nam);
           //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
         });
     }
@@ -62,24 +63,20 @@ function saveLabels() {
   function errorCB(err) {
     alert("Error processing SQL: " + err.message);
   }
- $tagcloud = $('#tagcloud');
 //Transaction success callback
   function successCB() {
     console.log("success in saving labels!");
-    // Destroy tag editor's instance if needed
-    remTags();
-	$tagcloud.refresh();
+    // Destroy tag editor's instance if needed	
+	remTags();
+	$textarea.tagEditor('destroy');
+	$textarea.empty();
     getPhoto();
+	var query1 = 'SELECT tag.tagname, COUNT(mapper.tag_fk) AS tagweight FROM tag JOIN mapper ON tag.tag_pk = mapper.tag_fk GROUP BY mapper.tag_fk;';
+	queryDb(query1);
   }
-
-
-  function destroyTagEditor() {
-    $('#textarea')
-      .val('');
-  }
-
+//Save both tag and photo to mapping table
   function createMaping(tags, query) {
-    for (i = 0; i < tags.length; i++) {
+    for (var i = 0; i < tags.length; i++) {
       db.transaction(makeTx(tags[i], query), errorCB);
       //console.log("tag ID: " + i + " photo ID: " + maxPhoto + "");
     } //end for call
@@ -92,7 +89,7 @@ function saveLabels() {
     }
   }
 }
-
+//Transaction error callback
 function errorCB(err) {
-  alert("Error processing SQL: " + err.message);
+  alert("Error processing SQL: " + err.message);  
 }

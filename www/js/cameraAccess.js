@@ -1,11 +1,9 @@
 //Add a listener and wait for the device to be ready
 document.addEventListener("deviceready", onDeviceReady, false);
 //Define a global variable
-//var db;
 var image;
-//When successfull do things
+//When Cordova API ready
 function onDeviceReady() {
-    // Now safe to use device APIs
     //console.log(navigator.camera);
     //console.log(sqlitePlugin.openDatabase);
     
@@ -25,24 +23,23 @@ function onSuccess(imageURI) {
         /*console.log("populateDB started");
         //Create necessary tables
 		//tx.executeSql('DROP TABLE IF EXISTS photo');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS photo (photo_pk integer primary key asc, photopath text )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS photo (photo_pk integer primary key asc, photopath text,utctime integer )');
 		//tx.executeSql('DROP TABLE IF EXISTS tag');
         tx.executeSql('CREATE TABLE IF NOT EXISTS  tag (tag_pk integer primary key asc, tagname text unique)');
 		//tx.executeSql('DROP TABLE IF EXISTS mapper');
         tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key asc, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
         console.log("tables created");*/ 
         //Insert the photo path to the photo table
-		tx.executeSql('INSERT INTO photo (photopath) VALUES(?)',  [ imageURI ] , function (tx, res) {
-        console.log("insertId: " + res.insertId + " -- probably 1");
-        console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+		tx.executeSql('INSERT INTO photo (photopath,utctime) VALUES(?,?)',[imageURI,unixtime] , function (tx, res) {
+        console.log("insertId: " +res.insertId+ "" +unixtime);
+        //console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
         });
         //Check rows inserted in a photo table
         tx.executeSql("SELECT count(photo_pk) as cnt FROM photo;", [], function (tx, res) {
         console.log("res.rows.length: " + res.rows.length + " -- should be 1");
         console.log("res.rows.item(0).cnt: " + res.rows.item(0).cnt + " -- should be 1");
 		console.log("populateDB finished");		
-        });
-		
+        });		
     }
     // Transaction error callback    
     function errorCB(err) {
@@ -50,13 +47,16 @@ function onSuccess(imageURI) {
     }
 
     function successCB() {
-        console.log("success in saving photo metadata!");
+        console.log("success in saving photo metadata!");				
     }
 	
 }
 
 function onFail(message) {
     alert('Failed because: ' + message);
+	$textarea.tagEditor('destroy');
+	$textarea.empty();
+	$textarea.hide();
 	
 }
 // A button will call this function
@@ -75,7 +75,7 @@ function showPhoto(source) {
   // Retrieve image file location from specified source
   navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
     destinationType: destinationType.FILE_URI,
-    sourceType:  Camera.PictureSourceType.SAVEDPHOTOALBUM, });
+    sourceType:  Camera.PictureSourceType.SAVEDPHOTOALBUM });
 }
 function onPhotoURISuccess () {
 	alert("You did it!");
