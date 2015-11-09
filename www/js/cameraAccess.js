@@ -7,7 +7,7 @@ function onDeviceReady() {
     //console.log(navigator.camera);
     //console.log(sqlitePlugin.openDatabase);
     
-//Open or create database
+	//Open or create database
     //db = window.sqlitePlugin.openDatabase({name: "my.db" //,androidDatabaseImplementation: 2
 	//});
 	//console.log(db);
@@ -54,17 +54,18 @@ function onSuccess(imageURI) {
 
 function onFail(message) {
     alert('Failed because: ' + message);
-	$textarea.tagEditor('destroy');
-	$textarea.empty();
-	$textarea.hide();
+	//$textarea.tagEditor('destroy');
+	remTags();
+	//$content2.empty();
+	$('btnGroup').hide();
 	
 }
 // A button will call this function
 function getPhoto() {
     // Opens camera and retrieve image
     navigator.camera.getPicture(onSuccess, onFail, {
-        quality: 100,
-        destinationType: Camera.DestinationType.FILE_URI,
+        quality: 75,
+        destinationType: Camera.DestinationType.FILE_URI,		
         sourceType: Camera.PictureSourceType.CAMERA,
 		// Hack: switch off in case of android emulator error
         saveToPhotoAlbum: true
@@ -73,11 +74,21 @@ function getPhoto() {
 //Show full sized image 
 function showPhoto(source) {
   // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: destinationType.FILE_URI,
+	navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 75,
+    destinationType: destinationType.FILE_URI,	
     sourceType:  Camera.PictureSourceType.SAVEDPHOTOALBUM });
 }
 function onPhotoURISuccess () {
 	alert("You did it!");
+}
+function openFile(filePath,fileMIMEType) {
+cordova.plugins.fileOpener2.open(
+    filePath, 
+    fileMIMEType, 
+    {
+        error : function(){console.log('Error status: ' + e.status + ' - Error message: ' + e.message);}, 
+        success : function(){ console.log('file opened successfully');  } 
+    } 
+);
 }
 

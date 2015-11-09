@@ -1,6 +1,7 @@
 //Add Cordova deviceready listener
 document.addEventListener("deviceready", onDeviceReady, false);
 var db;
+var $thumbs = $('thumbs');
 //Cordova API ready
 function onDeviceReady() {
     if (!window.sqlitePlugin.openDatabase) {
@@ -29,22 +30,10 @@ function onDeviceReady() {
         //tx.executeSql('DROP TABLE IF EXISTS mapper');
         tx.executeSql('CREATE TABLE IF NOT EXISTS mapper (map_id integer primary key asc, tag_fk integer,photo_fk integer, FOREIGN KEY (tag_fk) REFERENCES tag(tag_pk), FOREIGN KEY (photo_fk) REFERENCES photo(photo_pk))');
         console.log("tables created");
-
     }
-
     var query1 = 'SELECT tag.tagname, COUNT(mapper.tag_fk) AS tagweight FROM tag JOIN mapper ON tag.tag_pk = mapper.tag_fk GROUP BY mapper.tag_fk;';
-    queryDb(query1);
+    queryDb(query1);	
 }
-
-// Test dynamic html markup adding
-/*function test(tx,res) {
-		var markup = "";		
-		var name = res.rows.item(0).tagname;
-			markup += "<a href='#' data-role='button' data-inline='true' onclick='displayPhoto(" + name + ");' id=" + name + ">" + name + "</a>";
-			console.log(name);		
-		$tagcloud.append(markup);
-		$content1.trigger("create");
-	}*/
 //Create html markup for tag cloud dynamically and inject it into the main page
 function createTagCloud(tx, res) {
     console.log("I am in a cloud of tags!");
@@ -114,10 +103,9 @@ function createTagCloud(tx, res) {
         //Apply calculated font size
         fontsize = fontScale[scaleValue];
         newMarkup +=
-            "<a href='#' data-role='button' data-inline='true' id='" + name + "' onclick='displayPhoto(this.id);' class=" + fontsize + ">" + name + " (" + weight + ")</a>";
-
+        "<a href='#' data-role='button' data-inline='true' id='"+name+"' onclick='displayPhoto(this.id);' class=" +fontsize+ ">"+name+" ("+weight+ ")</a>";
     }
-    $tagcloud.append(newMarkup);
+    $tagcloud.append(newMarkup);	
     $content1.trigger("create");
 }
 //Display related photos after button click on the tag
@@ -150,35 +138,38 @@ function createThumbs(tx, res) {
     var time = 0;
     var d;
 	var n;
-	//Clear previous thumbnails (DOM) from the cache	
-    $thumbs.empty();
+	var dformat;
+	var di;
+	//Clear previous thumbnails (DOM) from the cache
+	$thumbs.empty();
     for (var i = 0; i < len; i++) {
         uri = res.rows.item(i).photopath;
         time = res.rows.item(i).utctime;
         console.log(time);
+		console.log(uri);
         d  = new Date(time * 1000);	
 		n = d.toTimeString();		
-        var dformat = [d.getMonth() + 1,
+        dformat = [d.getMonth() + 1,
         d.getDate(),
-        d.getFullYear()].join('/') + ' ' + [d.getHours(),
+        d.getFullYear()].join('/');		 
+		/* + ' ' + [d.getHours(),
         d.getMinutes(),
-        d.getSeconds()].join(':');		
-        //newMarkup += "<div class='thumbnail'><a href='"+uri+"' ><img src='"+uri+"' class='thumb'/></a></div>";
-        $thumbs.append("<li date="+dformat+"><a href="+uri+"><img src="+uri+">"+n+"</a></li");
+        d.getSeconds()].join(':');*/		
+        newMarkup += "<li id="+dformat+"><img src="+uri+" class='ui-li-has-thumb'/>"+n+"</li>";
+        //$thumbs.append("<li id="+dformat+"><img src="+uri+">"+n+"</li");
     }
     //Create thumbnails list dynamically
-	//$thumbs.append(newMarkup);
-	$.mobile.changePage('#photolist');    
+	$thumbs.append(newMarkup);
+	$(':mobile-pagecontainer').pagecontainer('change','#photolist');
     //Hack due to html enhancment issues with listview re-generation
-	//$li = $('li');
-    $thumbs.listview({
+	$thumbs.listview({
         autodividers: true,
         autodividersSelector: function (li) {
-            var di = new Date(li.attr('date'));
-			return (di.getMonth() + 1) + "/" + di.getDate() + "/" + di.getFullYear();
+            di = li.attr('id');
+			return di;//(di.getMonth() + 1) + "/" + di.getDate() + "/" + di.getFullYear();
         }
     }).listview('refresh');	
-    $content3.trigger('create');	
+    //$content3.enhanceWithin();
 }
 // Transaction error callback    
 function errorCB(err) {
@@ -211,8 +202,13 @@ function queryDb2(query, args) {
         };
     }
 }
-$thumb = $('thumb');
-$thumb.click(function () {
-    var uri = $('img', this).attr('src');
-    showPhoto(uri);
-}, false);
+//Open photo using default app
+$(document).on('pagecreate','#photolist',function(){
+$('li').on('click',function(){
+    var uri = $(this).children('img').attr('src');
+	var mime = 'image/jpeg';
+	openFile(uri,mime);
+});
+});
+
+

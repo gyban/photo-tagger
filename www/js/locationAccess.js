@@ -6,13 +6,14 @@ function getLocation() {
 	utctime = new Date();				
 	//Get Unix epoch time without miliseconds
 	unixtime = Math.floor(Date.parse(utctime) / 1000);
-    //Initialize tagger
+	//Initialize tagger with preffered settings
     $("#textarea").tagEditor({
+		initialTags: [],
+		maxTags: 50,
+        delimiter: ",;",
+		placeholder: 'Enter or edit labels ...',
 		removeDuplicates: true,
-		clickDelete: true,
-        delimiter: ",",
-        forceLowercase: false,
-        initialTags: []
+        forceLowercase: false        
     });    
     //Check if geolocation is availiable, if yes continue, if not rasie an alert
     if (navigator.geolocation) {
@@ -53,21 +54,20 @@ function printAddress(latitude, longitude) {
         'latLng': location
     }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-            if (results[0]) {
-                //Split address to logical blocks
-                var res = results[0].formatted_address.split(",");				
+            if (results[0]) {							
+                //Read address as aa string
+				var add = results[0].formatted_address;
+				//Clean address from numbers and other chars
+				var reg = /(\\+|\/+|\d|\ - |\ \d|\-\d)/g;				
 				//Get Local time
 				var localtime = utctime.toLocaleDateString();
-				//Get UTC back from Unix time				
-				//var utcFromUnix = new Date(unixtime);			
-				//console.log("Back to UTC :" +d2);
-				res.push(localtime);
-				//Fill up the text area with the tags created from the obtained address
-				var len = res.length;
-				for (var i = 0; i < len;i++) {
-                $('#textarea').tagEditor('addTag', res[i]);                
-				//console.log(results[0].types);                
-				}
+				//Create geotime string
+				add += ","+localtime;
+				var geotime = add.replace(reg,'');
+				geotime += utctime.getFullYear();
+				console.log(geotime);
+				//Fill up the text area with the tags created from the obtained address				
+                $('#textarea').tagEditor('addTag',geotime);				
             } else {
                 alert("No google address returned");
             }

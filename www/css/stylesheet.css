@@ -1,44 +1,61 @@
-.textpanel {
+#textpanel {
     position: relative;
     /*border: 1px dotted gray;*/
     display: inline-block; /* if you want this container to shrink-to-fit */
+	width:100%;	
 }
-.textpanel #photo #btnGroup {
+#textpanel #photo #btnGroup #btnLbl{
     display: block;
 }
+#btnLbl {
+position:absolute;
+right: 5px;
+top: 5px;	
+}
+
+#photo {width:100%;}
+
+#content2 {
+	padding: 0;
+    position : absolute !important;
+    top : 0 !important;
+    right : 0;
+    bottom : 0 !important;
+    left : 0 !important;
+}
+
+#btnCam {width:100%;}
+
 #btnGroup {
 	position: absolute;
 	bottom: 10%;
-	left: 50%;	
+	right:25%;
+    left:50%;
+	margin-left:-75px;
+	width:40%;
 }
-#btnGroup .ui-btn-text {font-size: 140%;}
 
-#btnCam .ui-btn-text{font-size: 120%;}
-
-/*#btnCam span span {
-    height: 100px !important;  
-    line-height: 70px;
-	font-size:medium;	
-}*/
-
-.s1 .ui-btn-text {
+#foot1 .ui-footer {
+	background-color:none !important;
+}
+.s1  {
 	font-size: 100%;
 }
-.s2 .ui-btn-text{
-	font-size: 120%;
+.s2 {
+	font-size: 115%;
 }
-.s3 .ui-btn-text{
-	font-size: 140%;
+.s3 {
+	font-size: 130%;
 }
-.s4 .ui-btn-text{
+.s4 {
+	font-size: 145%;
+}
+.s5 {
 	font-size: 160%;
 }
-.s5 .ui-btn-text{
-	font-size: 180%;
+.s6 {
+	font-size: 175%;
 }
-.s6 .ui-btn-text{
-	font-size: 200%;
-}
-.s7 .ui-btn-text{
-	font-size: 220%;
+.s7 {
+	font-size: 195%;
 }
