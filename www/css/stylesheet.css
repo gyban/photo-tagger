@@ -31,31 +31,31 @@ top: 5px;
 	bottom: 10%;
 	right:25%;
     left:50%;
-	margin-left:-75px;
+	margin-left:-65px;
 	width:40%;
 }
 
 #foot1 .ui-footer {
 	background-color:none !important;
 }
-.s1  {
-	font-size: 100%;
+.s1.ui-btn {
+	font-size: 100% !important;
 }
-.s2 {
-	font-size: 115%;
+.s2.ui-btn{
+	font-size: 115% !important;
 }
-.s3 {
-	font-size: 130%;
+.s3.ui-btn{
+	font-size: 130% !important;
 }
-.s4 {
-	font-size: 145%;
+.s4.ui-btn{
+	font-size: 145% !important;
 }
-.s5 {
-	font-size: 160%;
+.s5.ui-btn{
+	font-size: 160% !important;
 }
-.s6 {
-	font-size: 175%;
+.s6.ui-btn{
+	font-size: 175% !important;
 }
-.s7 {
-	font-size: 195%;
+.s7.ui-btn{
+	font-size: 195% !important;
 }
